@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  server1:
+    build: .
+    environment:
+      - PORT=3001
+      - NAME=server1.2
+      - REDIS_URL=redis://redis:6379  # Reference the Redis instance
+    ports:
+      - "3001:3001"
+    depends_on:
+      - redis
+    networks:
+      - redis-net
+
+  server2:
+    build: .
+    environment:
+      - PORT=3002
+      - NAME=server2.2
+      - REDIS_URL=redis://redis:6379  # Reference the Redis instance
+    ports:
+      - "3002:3002"
+    depends_on:
+      - redis
+    networks:
+      - redis-net
+
+  server3:
+    build: .
+    environment:
+      - PORT=3003
+      - NAME=server3.2
+      - REDIS_URL=redis://redis:6379  # Reference the Redis instance
+    ports:
+      - "3003:3003"
+    depends_on:
+      - redis
+    networks:
+      - redis-net
+
+  redis:
+    image: redis:7.0
+    container_name: redis
+    ports:
+      - "6379:6379" # Expose Redis default port
+    networks:
+      - redis-net
+    command: ["redis-server", "--appendonly", "yes"] # Enable persistence
+
+networks:
+  redis-net:
+    driver: bridge
